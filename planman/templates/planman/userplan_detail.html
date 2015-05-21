@@ -1,0 +1,8 @@
+{% extends 'planman/base.html' %}
+{% block content %}
+<h2>{{ object.user_description }}</h2>
+
+    <p><b>Provider</b>{{ object.provider }}</p>
+    <p><b>Next Renewal</b>{{ object.next_renewal_date|date }}</P>
+
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'planman/base.html' %}
+{% block content %}
+<h2>Here is some body {{ test }} im</h2>
+
+    <ul>
+        {% for userplan in object_list %}
+        <li>{{ userplan.id }}{{ userplan.user_description }}</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

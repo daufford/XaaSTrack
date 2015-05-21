@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.urlresolvers import reverse
 
 class UserProfile(models.Model):
     name = models.CharField(max_length=200)
@@ -11,9 +12,9 @@ class PlanProvider(models.Model):
         return self.name
 
 class UserPlan(models.Model):
+    user_description = models.CharField(max_length=200)
     userprofile = models.ForeignKey(UserProfile)
     provider = models.ForeignKey(PlanProvider)
-    user_description = models.CharField(max_length=200)
     start_date = models.DateField()
     next_renewal_date = models.DateField()
     expiration_date = models.DateField()
@@ -22,19 +23,21 @@ class UserPlan(models.Model):
     #recurring_amount = models.DecimalField()  #:  check syntax
     #notes = models.TextField()   #
     def __str__(self):
-        self.user_description
+        return self.user_description
+    def get_absolute_url(self):
+        return reverse('userplan-detail', kwargs={'pk':self.pk})
 
 class PlanEvent(models.Model):
     userplan = models.ForeignKey(UserPlan)
     user_description = models.CharField(max_length=200)
     def __str__(self):
-        self.user_description
+        return self.user_description
 
 class PlanPayments(models.Model):
     user_description = models.CharField(max_length=200)
     planevent = models.ForeignKey(PlanEvent)
     def __str__(self):
-        self.user_description
+       return self.user_description
 
 # # Create your models here.
 # class Question(models.Model):
