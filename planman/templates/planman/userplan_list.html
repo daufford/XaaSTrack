@@ -1,11 +1,41 @@
-{% extends 'planman/base.html' %}
-{% block content %}
-<h2>Here is some body {{ test }} im</h2>
+{% extends 'planman/../base.html' %}
+{% load bootstrap3 %}
 
-    <ul>
-        {% for userplan in object_list %}
-        <li>{{ userplan.id }}{{ userplan.user_description }}</li>
-        {% endfor %}
-    </ul>
+
+{% block content %}
+    <h2>
+        <p class="text-right">
+            Your Plans
+            <a href="{% url 'userplan-create' %}" class="btn btn-success">
+                <i class="fa fa-plus"></i> Add New
+            </a>
+        </p>
+    </h2>
+
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">Active Plans</h3>
+        </div>
+        <div class="panel-body">
+            {#        Panel Content       #}
+            <table class="table table-striped">
+                <tr>
+                    <th>Description</th>
+                    <th>Provider</th>
+                </tr>
+
+                </th>
+                {% for userplan in object_list %}
+                    <tr>
+                        <td>{{ userplan.user_description }}</td>
+                        <td>{{ userplan.planprovider }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+
 
 {% endblock %}

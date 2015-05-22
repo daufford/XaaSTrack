@@ -8,9 +8,18 @@ from .views import *
 
 urlpatterns = [
 
+    #UserPlan
     url(r'^$', UserPlanList.as_view(), name='userplan-list'),
-    url(r'^add/$', UserPlanCreate.as_view(), name='userplan-create'),
+    url(r'^new/$', UserPlanCreate.as_view(), name='userplan-create'),
     url(r'^(?P<pk>\d+)/$', UserPlanDetail.as_view(), name='userplan-detail'),
-    url(r'^(?P<pk>\d+)/update/$', UserPlanUpdate.as_view(), name='userplan-update'),
-    url(r'^(?P<pk>\d+)/delete/$', UserPlanDelete.as_view(), name='userplan-delete'),
+    url(r'^(?P<pk>\d+)/update$', UserPlanUpdate.as_view(), name='userplan-update'),
+    url(r'^(?P<pk>\d+)/delete$', UserPlanDelete.as_view(), name='userplan-delete'),
+
+    #Provider
+    url(r'^provider/$', PlanProviderList.as_view(), name='provider-list'),
+    url(r'^provider/new$', PlanProviderCreate.as_view(), name='provider-create'),
+    url(r'^provider/(?P<pk>\d+)/$', PlanProviderDetail.as_view(), name='provider-detail'),
+    url(r'^provider/(?P<pk>\d+)/update', PlanProviderUpdate.as_view(), name='provider-update'),
+    url(r'^provider/(?P<pk>\d+)/delete', PlanProviderDelete.as_view(), name='provider-delete'),
+
 ]

@@ -1,20 +1,25 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.core.urlresolvers import reverse
 
 class UserProfile(models.Model):
-    name = models.CharField(max_length=200)
+    user = models.OneToOneField(User)
+    lastsync = models.DateTimeField('Last time user loaded transactions',blank=True,null=True)
     def __str__(self):
-        return self.name
+        return self.user.username
 
 class PlanProvider(models.Model):
     name = models.CharField(max_length=200)
     def __str__(self):
         return self.name
+    def get_absolute_url(self):
+        return reverse('provider-detail', kwargs={'pk':self.pk})
+
 
 class UserPlan(models.Model):
     user_description = models.CharField(max_length=200)
-    userprofile = models.ForeignKey(UserProfile)
-    provider = models.ForeignKey(PlanProvider)
+    userprofile = models.ForeignKey(UserProfile,verbose_name='user/owner')
+    planprovider = models.ForeignKey(PlanProvider,verbose_name='provider of this service')
     start_date = models.DateField()
     next_renewal_date = models.DateField()
     expiration_date = models.DateField()
