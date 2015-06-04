@@ -1,6 +1,8 @@
+from datetime import timezone
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.utils import timezone
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
@@ -15,18 +17,27 @@ class PlanProvider(models.Model):
     def get_absolute_url(self):
         return reverse('provider-detail', kwargs={'pk':self.pk})
 
-
 class UserPlan(models.Model):
-    user_description = models.CharField(max_length=200)
-    userprofile = models.ForeignKey(UserProfile,verbose_name='user/owner')
-    planprovider = models.ForeignKey(PlanProvider,verbose_name='provider of this service')
-    start_date = models.DateField()
-    next_renewal_date = models.DateField()
-    expiration_date = models.DateField()
-    #@todo:  fix these fields
-    #type = models.  @type field, how to do this?
-    #recurring_amount = models.DecimalField()  #:  check syntax
-    #notes = models.TextField()   #
+
+    #description
+    user_description = models.CharField(max_length=200,verbose_name="Description")
+    user = models.ForeignKey(User,verbose_name='*useraccount')
+    planprovider_text = models.CharField(max_length=200,verbose_name='Service Provider')
+    planprovider_key = models.ForeignKey(PlanProvider,verbose_name='*service provider _ key',blank=True,null=True,on_delete=models.SET_NULL)
+    notes=models.TextField(blank=True,verbose_name="Notes")
+
+    #plan start/end/renewal
+    start_date = models.DateField(null=True,blank=True)
+    next_renewal_date = models.DateField(null=True,blank=True)
+    expiration_date = models.DateField(null=True,blank=True)
+
+    #payments
+    last_payment_date = models.DateField(null=True,blank=True)
+    next_payment_date = models.DateField(null=True,blank=True)
+    has_recurring_payment = models.BooleanField(default=False,verbose_name ="Has Recurring Payments?")
+    recurring_payment_amount = models.DecimalField(null=True,blank=True,max_digits=10,decimal_places=2,verbose_name="Recurring Payment Amount")
+    recurring_payment_months = models.PositiveSmallIntegerField(null=True,blank=True,verbose_name="Recurring Payment Occurs every X Months")
+
     def __str__(self):
         return self.user_description
     def get_absolute_url(self):
@@ -43,29 +54,3 @@ class PlanPayments(models.Model):
     planevent = models.ForeignKey(PlanEvent)
     def __str__(self):
        return self.user_description
-
-# # Create your models here.
-# class Question(models.Model):
-#   #list model attributes below, as subclasses of with models.<type>
-#   question_text = models.CharField(max_length=200)
-#   pub_date = models.DateTimeField('date published')
-#
-#   #default string description of the model object
-#   def __str__(self):
-#     return self.question_text
-#   #create a custom attribute that returns a calculation
-#   def was_published_recently(self):
-#     return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
-#   #some customizations to how the field is displayed in admin.  See Django list display
-#   was_published_recently.admin_order_field = 'pub_date'
-#   was_published_recently.boolean = True
-#   was_published_recently.short_description='Published Recently?'
-#
-#
-# class Choice(models.Model):
-#   question = models.ForeignKey(Question)
-#   choice_text = models.CharField(max_length=200)
-#   votes = models.IntegerField(default=0)
-#
-#   def __str__(self):
-#     return "%s (%d votes)" % (self.choice_text, self.votes)

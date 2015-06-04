@@ -1,0 +1,19 @@
+{% extends 'planman/../base.html' %}
+{% load bootstrap3 %}
+
+{% block content %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Logged Out</h3>
+        </div>
+        <div class="panel-body">
+            <p>
+            Thanks!  You are now logged out
+            </p>
+            <p>
+                <a href="{% url 'login' %}">Log in again</a>
+            </p>
+        </div>
+    </div>
+
+{% endblock %}

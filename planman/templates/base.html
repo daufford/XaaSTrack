@@ -6,6 +6,7 @@
     {% load bootstrap3 %}
     {% bootstrap_css %}
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
 <!-- Fixed navbar -->
@@ -29,7 +30,7 @@
                     <li><a href="{#% url 'events-list' %#}">History</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{% url 'login' %}">{{ user.username }}</a></li>
+                    <li><a href="#">{{ user.username }}</a></li>
                     <li><a href="{% url 'logout' %}">Logout</a></li>
                 </ul>
             </div>
@@ -52,7 +53,7 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{% url 'login' %}">Sign up</a></li>
+                    <li><a href="{% url 'register' %}">Sign up</a></li>
                     <li><a href="{% url 'login' %}">Login</a></li>
                 </ul>
             </div>
