@@ -38,7 +38,7 @@
         </div>
     </nav>
 {% else %}
-{#    ***NAV if not logged in#}
+    {#    ***NAV if not logged in#}
     <nav class="navbar navbar-default">
         <div class="container">
             <div class="navbar-header">
@@ -62,8 +62,15 @@
     </nav>
 {% endif %}
 <div class="container">
-    {% bootstrap_messages %}
-    {% block content %}base content{% endblock %}
+    {% block gridstart %}
+        <div class="col-sm-3"></div>
+        <div class="col-md-6">
+    {% endblock %}
+        {% bootstrap_messages %}
+        {% block content %}base content{% endblock %}
+    {% block gridend %}
+        </div>
+    {% endblock %}
 </div>
 {% bootstrap_javascript jquery=1 %}
 </body>

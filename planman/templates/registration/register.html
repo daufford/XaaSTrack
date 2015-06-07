@@ -2,34 +2,31 @@
 {% load bootstrap3 %}
 
 {% block content %}
-    <div class="col-sm-3"></div>
-    <div class="col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Sign up!</h3>
-            </div>
-            <div class="panel-body">
-                {% if user.is_authenticated %}
-                <p>{{ user.username  }}, you are already logged in.  Please <a href="{% url 'logout' %}">logout</a> first</p>
-                {% elif registered %}
-                    <strong>Thank you for registering!</strong>
-                    <a href="{% url 'login' %}">Now, go ahead and login...</a>
-                {% else %}
-                    <form method="post" action="{% url 'register' %}" class="form-signin">
-                        {% csrf_token %}
-                        {% bootstrap_form user_form %}
-                        {% bootstrap_form profile_form %}
-                        <button class="btn btn-lg btn-success btn-block" type="submit">Sign up</button>
-                    </form>
-                {% endif %}
-            </div>
-            {% if not registered %}
-                <div class="panel-footer">
-                    <p style="text-align: center"><a href="{% url 'login' %}">Already have an account?</a></p>
-                </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Sign up!</h3>
+        </div>
+        <div class="panel-body">
+            {% if user.is_authenticated %}
+                <p>{{ user.username }}, you are already logged in. Please <a href="{% url 'logout' %}">logout</a> first
+                </p>
+            {% elif registered %}
+                <strong>Thank you for registering!</strong>
+                <a href="{% url 'login' %}">Now, go ahead and login...</a>
+            {% else %}
+                <form method="post" action="{% url 'register' %}" class="form-signin">
+                    {% csrf_token %}
+                    {% bootstrap_form user_form %}
+                    {% bootstrap_form profile_form %}
+                    <button class="btn btn-lg btn-success btn-block" type="submit">Sign up</button>
+                </form>
             {% endif %}
         </div>
-    </div>
+        {% if not registered %}
+            <div class="panel-footer">
+                <p style="text-align: center"><a href="{% url 'login' %}">Already have an account?</a></p>
+            </div>
+        {% endif %}
     </div>
 
 {% endblock %}

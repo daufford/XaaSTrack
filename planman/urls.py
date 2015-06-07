@@ -23,4 +23,11 @@ urlpatterns = [
     url(r'^provider/(?P<pk>\d+)/update', PlanProviderUpdate.as_view(), name='provider-update'),
     url(r'^provider/(?P<pk>\d+)/delete', PlanProviderDelete.as_view(), name='provider-delete'),
 
+    ##events/payments
+    url(r'^plan/(?P<plan_id>\d+)/newevent/$', views.createEvent, name='event-create'),
+    url(r'^event/(?P<pk>\d+)/update', PlanEventUpdate.as_view(), name='event-update'),
+    url(r'^event/(?P<pk>\d+)/delete', PlanEventDelete.as_view(), name='event-delete'),
+
+
+
 ]

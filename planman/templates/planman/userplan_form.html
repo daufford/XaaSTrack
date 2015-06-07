@@ -2,10 +2,32 @@
 {% load bootstrap3 %}
 
 {% block content %}
-    <h2>Userplan</h2>
-    <form action="" method="post">
-        {% csrf_token %}
-        {% bootstrap_form form %}
-        {% buttons submit='OK' reset="Cancel" %}{% endbuttons %}
-    </form>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h1 class="panel-title">
+                {{ userplan.planprovider_text|default:"Create new plan" }}
+                {% if userplan.user_description %}
+                    ({{ userplan.user_description }})
+                {% endif %}
+            </h1>
+        </div>
+        <div class="panel-body">
+
+            <h3>Userplan</h3>
+            <form action="" method="post">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                {% buttons submit='Save' %}
+                    {% if userplan %}
+                        <span style="float:right">
+                        <a href="{{ userplan.get_absolute_url }}delete" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                        </span>
+                    {% endif %}
+                {% endbuttons %}
+            </form>
+        </div>
+        <div class="panel-footer">
+            <a href="{% url 'userplan-list' %}">< Home</a>
+        </div>
+    </div>
 {% endblock %}

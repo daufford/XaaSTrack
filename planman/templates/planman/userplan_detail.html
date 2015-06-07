@@ -1,8 +1,108 @@
 {% extends 'planman/../base.html' %}
+{% load bootstrap3 %}
+
 {% block content %}
-<h2>{{ object.user_description }}</h2>
+    <div class="panel panel-info">
+    <div class="panel-heading">
+{#            <h3 class="panel-title">{{ object.planprovider_text }}</h3>#}
+        <h2 class="panel-title" style="width:100%">{{ object.planprovider_text }}
+            <div class="text-right" style="float:right">
+        <a href="{{ object.get_absolute_url }}update" class="btn btn-default btn-xs">
+                    <i class="fa fa-edit"></i> Edit
+                </a></div>
+        </h2>
 
-    <p><b>Provider</b>{{ object.provider }}</p>
-    <p><b>Next Renewal</b>{{ object.next_renewal_date|date }}</P>
+        </div>
 
+        <div class="panel-body">
+            <p>Description: {{ object.user_description }}</p>
+            <p>Last month:  ${{ object.get_amount_last_month }}</p>
+            <p>Last year: ${{ object.get_year_to_date }}</p>
+            <p>Next Renewal: {{ object.next_renewal_date|date }}</p>
+            <a href="{% url 'userplan-list' %}">< Home</a>
+
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">History: {{ userplan }}</h3>
+        </div>
+        <div class="panel-body">
+            <div class="text-center">
+                {% bootstrap_form_errors stop_form %}
+                <form action="{% url 'event-create' plan_id=userplan.id %}" method="post">
+                    {% csrf_token %}
+                    <p>
+                        <b> Amount: </b>
+                        {{ stop_form.amount }}
+                        <b> On: </b>{{ stop_form.event_date }}
+                        <b> Note: </b>
+                        {{ stop_form.user_description }}
+
+                        <input type="submit" name="pay" value="Add Payment" class="btn btn-success btn-sm"/>
+                    </p>
+
+
+                </form>
+            </div>
+
+
+            <table class="table table-hover">
+                <tr>
+                    <th>Event</th>
+                    <th>Date</th>
+                    <th>Details</th>
+                    <th>Amount</th>
+                </tr>
+                {% for planevent in object.planevent_set.all %}
+                    <tr id="event_{{ object.id }}">
+                        <td class="
+                    {% if planevent.event_type == 'payx' %}success{% elif planevent.event_type == 'stopx' %}warning{% else %}primary{% endif %}
+                    ">
+                            {{ planevent.event_type|capfirst }}
+
+                        <td>{{ planevent.event_date }}</td>
+
+                        <td>{{ planevent.user_description }}</td>
+                        <td>{{ planevent.amount|default:"n/a" }}
+                        <span style="float:right">
+                            <a href="{% url 'event-update' pk=planevent.id %}" class="btn btn-default btn-xs"><i
+                                    class="fa fa-edit"></i></a>
+
+                            <a href="{% url 'event-delete' pk=planevent.id %}"
+                               class="btn btn-default btn-xs event_delete"><i class="fa fa-trash"></i></a>
+</span></td>
+                    </tr>
+                {% endfor %}
+
+            </table>
+
+        </div>
+        <div class="panel-footer">
+            <div class="text-center">
+                <form action="{% url 'event-create' plan_id=userplan.id %}" method="post">
+                    {% csrf_token %}
+                    <p>
+                        <b>Actions:</b>
+                        <input type="submit" name="start" value="Start" class="btn btn-default btn-sm"/>
+                        <input type="submit" name="stop" value="Stop" class="btn btn-default btn-sm"/>
+                        <input type="submit" name="renew" value="Renew" class="btn btn-default btn-sm"/>
+
+                        <b> On: </b>{{ stop_form.event_date }}
+                        <b> Note: </b>
+                        {{ stop_form.user_description }}
+
+                    </p>
+
+
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block gridstart %}
+    <div class="col-sm-2"></div>
+    <div class="col-md-8">
 {% endblock %}

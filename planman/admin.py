@@ -6,3 +6,4 @@ from .models import *
 admin.site.register(UserProfile)
 admin.site.register(UserPlan)
 admin.site.register(PlanProvider)
+admin.site.register(PlanEvent)
