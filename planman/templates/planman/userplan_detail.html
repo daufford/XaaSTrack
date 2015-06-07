@@ -2,30 +2,39 @@
 {% load bootstrap3 %}
 
 {% block content %}
-    <div class="panel panel-info">
-    <div class="panel-heading">
-{#            <h3 class="panel-title">{{ object.planprovider_text }}</h3>#}
-        <h2 class="panel-title" style="width:100%">{{ object.planprovider_text }}
-            <div class="text-right" style="float:right">
-        <a href="{{ object.get_absolute_url }}update" class="btn btn-default btn-xs">
-                    <i class="fa fa-edit"></i> Edit
-                </a></div>
-        </h2>
+    <div class="text-center"><h1>    {{ object.planprovider_text }}</h1></div>
+    <div class="panel panel-default">
+
+            <div class="panel-heading">
+            {#            <h3 class="panel-title">{{ object.planprovider_text }}</h3>#}
+            <h2 class="panel-title" style="width:100%">Details
+
+            </h2>
 
         </div>
+<div class="panel-body">
 
-        <div class="panel-body">
+
+            <p>Service Provider: {{ object.planprovider_text }}</p>
             <p>Description: {{ object.user_description }}</p>
-            <p>Last month:  ${{ object.get_amount_last_month }}</p>
+
+            <p>Last month: ${{ object.get_amount_last_month }}</p>
+
             <p>Last year: ${{ object.get_year_to_date }}</p>
+
             <p>Next Renewal: {{ object.next_renewal_date|date }}</p>
             <a href="{% url 'userplan-list' %}">< Home</a>
+            <span style="float:right">
+                <a href="{{ object.get_absolute_url }}update" class="btn btn-default btn-xs">
+                    <i class="fa fa-edit"></i> Edit
+                </a>
+            </span>
 
         </div>
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title">History: {{ userplan }}</h3>
+            <h3 class="panel-title">History</h3>
         </div>
         <div class="panel-body">
             <div class="text-center">
