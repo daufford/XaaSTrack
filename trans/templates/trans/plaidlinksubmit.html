@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+
+{#Using Plaid Link#}
+{#https://github.com/plaid/link#step-1-get-your-public_key#}
+
+{% block content %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h1 class="panel-title">
+                Account Connected!
+            </h1>
+        </div>
+        <div class="panel-body">
+            <h3>We've successfully linked to your account!</h3>
+            <p>Status Text: {{ plaidaccount.status_text }}
+            </p>
+            <p>We'll retrieve the transactions for you shortly</p>
+            <p></p>
+            <p>When you are ready, you can <a href="{% url 'plaid-token-list' %}">
+                view all your linked accounts</a></p>
+        </div>
+        <div class="panel-footer">
+            <a href="/">< Home</a>
+        </div>
+    </div>
+{% endblock %}
+
+
+{##}
+{#            <h3>Userplan</h3>#}
+{#            <form action="" method="post">#}
+{#                {% csrf_token %}#}
+{#                {% bootstrap_form form %}#}
+{#                {% buttons submit='Save' %}#}
+{#                    {% if userplan %}#}
+{#                        <span style="float:right">#}
+{#                        <a href="{{ userplan.get_absolute_url }}delete" class="btn btn-danger"><i class="fa fa-trash"></i></a>#}
+{#                        </span>#}
+{#                    {% endif %}#}
+{#                {% endbuttons %}#}
+{#            </form>#}

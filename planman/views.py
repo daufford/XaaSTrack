@@ -10,7 +10,6 @@ from django.contrib import messages
 
 # Create your views here.
 from planman.forms import UserPlanForm,SignUpForm, UserProfileForm, PlanEventForm
-from django.contrib.auth.forms import UserCreationForm
 
 ##Registration
 def register(request):  #http://www.tangowithdjango.com/book17/chapters/login.html#creating-a-user-registration-view-and-template

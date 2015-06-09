@@ -1,4 +1,4 @@
-{% extends 'planman/../base.html' %}
+{% extends 'base.html' %}
 {% load bootstrap3 %}
 
 {% block content %}
@@ -60,8 +60,8 @@
                 <tr>
                     <th>Event</th>
                     <th>Date</th>
-                    <th>Details</th>
                     <th>Amount</th>
+                    <th>Details</th>
                 </tr>
                 {% for planevent in object.planevent_set.all %}
                     <tr id="event_{{ object.id }}">
@@ -72,8 +72,8 @@
 
                         <td>{{ planevent.event_date }}</td>
 
-                        <td>{{ planevent.user_description }}</td>
                         <td>{{ planevent.amount|default:"n/a" }}
+                        <td>{{ planevent.user_description }}</td>
                         <span style="float:right">
                             <a href="{% url 'event-update' pk=planevent.id %}" class="btn btn-default btn-xs"><i
                                     class="fa fa-edit"></i></a>

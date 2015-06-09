@@ -11,6 +11,7 @@ urlpatterns = [
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^planman/', include('planman.urls')),
+    url(r'^plaid/',include('trans.urls')),
     url(r'^',include('planman.urls')),
 
     ##Use stock auth views:

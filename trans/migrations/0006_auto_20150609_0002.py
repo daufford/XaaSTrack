@@ -7,13 +7,13 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('planman', '0001_initial'),
+        ('trans', '0005_auto_20150609_0000'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='userplan',
-            name='start_date',
-            field=models.DateField(null=True, blank=True),
+            model_name='plaidtransaction',
+            name='category',
+            field=models.CharField(blank=True, max_length=50),
         ),
     ]
