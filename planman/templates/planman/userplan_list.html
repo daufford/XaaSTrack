@@ -35,8 +35,8 @@
                             {{ userplan.planprovider_text }}</a></td>
                         <td>{{ userplan.user_description }}</td>
                         <td>{{ userplan.get_last_payment_date }}</td>
-                        <td>{{ userplan.get_monthly_payment }}</td>
-                        <td>{{ userplan.get_year_to_date }}</td>
+                        <td>{{ userplan.get_monthly_payment | floatformat:2 }}</td>
+                        <td>{{ userplan.get_year_to_date | floatformat:2}}</td>
                     </tr>
 
                 {% endfor %}
@@ -44,8 +44,8 @@
                     <th>Totals:</th>
                     <th></th>
                     <th></th>
-                    <th>{{ total_month }}<sub>/month</sub></th>
-                    <th>{{ total_ytd }}<sub>/year</sub></th>
+                    <th>{{ total_month | floatformat:2}}<sub>/month</sub></th>
+                    <th>{{ total_ytd | floatformat:2}}<sub>/year</sub></th>
                 </tr>
             </table>
             </div>
