@@ -64,7 +64,10 @@ class UserPlan(models.Model):
 
     def get_monthly_payment(self):
         if(self.recurring_payment_amount):
-            return self.recurring_payment_amount
+            monthly_amount = self.recurring_payment_amount
+            if(self.recurring_payment_months>0):
+                monthly_amount=monthly_amount/self.recurring_payment_months
+            return Decimal(monthly_amount)
         else:
             return self.get_amount_last_month()
 
