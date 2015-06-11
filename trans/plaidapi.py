@@ -95,12 +95,12 @@ class PlaidAPI():
             transaction.amount = t['amount']
             transaction.name = t['name'].encode('utf-8')
             transaction.date = t['date']
-            transaction.type = t['type'].encode('utf-8')
+            transaction.type = t['type']
             if 'category' in t:
                 transaction.category = t['category'].encode('utf-8')
             if 'meta' in t:
-                transaction.meta = t['meta'].encode('utf-8')
-                transaction.meta_score = t['score'].encode('utf-8')
+                transaction.meta = t['meta']
+                transaction.meta_score = t['score']
 
             transaction.save()
             print("{0} tx: {1} {2} ".format(created,transaction.date,transaction.name) )
