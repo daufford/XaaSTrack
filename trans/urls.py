@@ -1,7 +1,6 @@
 from django.conf.urls import url
 
 from . import views
-
 # check out https://docs.djangoproject.com/en/1.8/ref/urlresolvers/
 # #module-django.core.urlresolvers for more info
 from .views import *
@@ -9,22 +8,24 @@ from .views import *
 urlpatterns = [
 
     #Creating Plaid Accounts
-    url(r'^$', views.index, name='plaid-index'),
-    url(r'^link/$',views.plaidlink, name='plaid-link'),
-    url(r'^link/submit/',views.plaidlink_submit, name='plaid-link-submit'),
+    url(r'^$', PlaidTokenList.as_view(), name='plaid-index'),
+    url(r'^link$',views.plaidlink, name='plaid-link'),
+    url(r'^link/submit$',views.plaidlink_submit, name='plaid-link-submit'),
     url(r'^token/list$',PlaidTokenList.as_view(),name='plaid-token-list'),
-    url(r'^token/(?P<pk>\d+)/update$',PlaidTokenUpdate.as_view(),name='plaid-token-update'),
     url(r'^token/(?P<pk>\d+)/retrieve$',views.transactions_retrieve,name='plaid-token-retrieve'),
+    #url(r'^token/(?P<pk>\d+)/transactions/$',PlaidTransactionList.as_view(),name='plaid-token-transactions'),
 
     #converting transactions
-    url(r'^flag/$',views.transactions_flag,name='plaid-flag'),
-    url(r'^convert/$',views.transactions_convert,name='plaid-convert'),
-    url(r'^/flag/submit$',views.transactions_flag_submit,name='plaid-flag-submit'),
-    url(r'^/convert/submit$',views.transactions_convert_submit,name='plaid-convert-submit'),
+    url(r'^flag/$',PlaidTransactionList_Flag.as_view(),name='plaid-flag'),
+    url(r'^flag/showall$',PlaidTransactionList.as_view(),name='plaid-transaction-list'),
 
-    #viewing transactions
-    url(r'^transaction/list$',PlaidTransactionList.as_view(),name='plaid-transaction-list'),
-    url(r'^transaction/(?P<pk>\d+)/update$',PlaidTransactionUpdate.as_view(),name='plaid-transaction-update'),
+    url(r'^flag/convert/(?P<pk>\w+)/$',views.transaction_convert,name='plaid-flag-convert'),
+    #url(r'^flag/ignore/(?P<pk>\w+)/$',views.transaction_ignore,name='plaid-flag-ignore'),
+    # url(r'^convert/$',views.transactions_convert,name='plaid-convert'),
+    # url(r'^/flag/submit$',views.transactions_flag_submit,name='plaid-flag-submit'),
+    # url(r'^/convert/submit$',views.transactions_convert_submit,name='plaid-convert-submit'),
+
+
 ]
 
     # url(r'^plan/$', UserPlanList.as_view(), name='userplan-list'),

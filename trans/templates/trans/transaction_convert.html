@@ -9,24 +9,30 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <h1 class="panel-title">
-                Connect to Plaid
+                Convert Transaction
+                <span style="float:right">
+                {# button was here #}
+                </span>
             </h1>
         </div>
         <div class="panel-body">
+        {{ transaction.name }}
 
-            <!-- A hidden input named public_token will be appended to this form
-once the user has completed the Link flow. Link will then submit the
-form, sending the public_token to your server. -->
-            <form id="plaid-link-form-id" method="GET" action="{% url 'plaid-link-submit' %}"></form>
+            {% bootstrap_form_errors stop_form %}
+                <form action="{% url 'event-create' plan_id=userplan.id %}" method="post">
+                    {% csrf_token %}
+                    <p>
+                        <b> Amount: </b>
+                        {{ stop_form.amount }}
+                        <b> On: </b>{{ stop_form.event_date }}
+                        <b> Note: </b>
+                        {{ stop_form.user_description }}
 
-            <script
-                    src="https://cdn.plaid.com/link/stable/link-initialize.js"
-                    data-client-name="Client Name"
-                    data-form-id="plaid-link-form-id"
-                    data-key="{{ public_key }}"
-                    data-product="connect"
-                    data-env="tartan">
-            </script>
+                        <input type="submit" name="pay" value="Add Payment" class="btn btn-success btn-sm"/>
+                    </p>
+
+
+                </form>
 
 
         </div>

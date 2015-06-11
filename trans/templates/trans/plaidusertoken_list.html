@@ -9,14 +9,43 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <h1 class="panel-title">
-                Connect to Plaid
+                Your Connections with Plaid
+                <span style="float:right">
+                {# button was here #}
+                </span>
             </h1>
         </div>
         <div class="panel-body">
+        <div>
+        <a href="{% url 'plaid-link' %}" class="btn btn-success btn-sm">
+                <i class="fa fa-plus"></i> Link new account
+                </a>
+            <a href="{% url 'plaid-flag' %}" class="btn btn-default btn-sm">
+                <i class="fa fa-bolt"></i> Process Transactions
+                </a>
+        </div>
+        <p></p>
+        <hr>
+        <b>Your connections:</b>
 
- <ul>
-        {% for object in object_list %}
-        <li>{{ object.id }}{{ object.name }}</li>
+ <ul class="list-group">
+        {% for usertoken in object_list %}
+        <li class="list-group-item"><b>Connection Id #: {{ usertoken.name }} {{ usertoken.access_token|truncatechars:8  }}</b>.
+            <br>Status: {{ usertoken.status_text }}
+                        <p>Accounts:
+            <ul>
+            {% for account in usertoken.plaidaccount_set.all %}
+
+            <li>
+                {{ account.name }} ( {{account.type }} : {{ account.institution_type }})
+            </li>
+                {% endfor %}
+            </p>
+            </ul>
+        <br><a href="{% url 'plaid-token-retrieve' usertoken.id %}" class="btn btn-warning btn-sm"><i class="fa fa-refresh"></i> Refresh Connection</a>
+
+
+        </li>
         {% endfor %}
     </ul>
 

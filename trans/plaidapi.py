@@ -1,7 +1,9 @@
-from plaid import Client
 import json
-from trans.models import PlaidUserToken, PlaidAccount, PlaidTransaction
+
 from django.utils import timezone
+
+from plaid import Client
+from trans.models import PlaidUserToken, PlaidAccount, PlaidTransaction
 
 
 class PlaidAPI():
@@ -62,11 +64,13 @@ class PlaidAPI():
             account._id = a['_id']
             account._item = a['_item']
             account._user = a['_user']
-            account.name = a['meta']['name']
+            account.name = a['meta']['name'].encode('utf-8')
             account.type = a['type']
-            account.instituion_type = a['institution_type']
+            account.institution_type = a['institution_type']
 
-            account.save()
+
+            #tmp_id = unicodedata.normalize('NFKD', account._id).encode('ascii','ignore')
+            #tmp_name = line = unicodedata.normalize('NFKD', account.name).encode('ascii','ignore')
             print("{0} account: {1} id: {2}".format(created,account.name, account._id) )
 
         ##Load in the accounts
@@ -88,7 +92,7 @@ class PlaidAPI():
             transaction._account = t['_account']
             transaction.account=PlaidAccount.objects.filter(_id=t['_account']).get()
             transaction.amount = t['amount']
-            transaction.name = t['name']
+            transaction.name = t['name'].encode('utf-8')
             transaction.date = t['date']
             transaction.type = t['type']
             if 'category' in t:
@@ -100,5 +104,9 @@ class PlaidAPI():
             transaction.save()
             print("{0} tx: {1} {2} ".format(created,transaction.date,transaction.name) )
 
-        # parse the plaid response and create plaid transactions
+        # update the user token
+
+        usertoken.status_text = "Synced on {0}. Retrieved {1} accounts and {2} transactions ({3} new)".format(timezone.now(),len(json_accounts),len(json_transactions),len(new_transaction_list))
+        usertoken.last_sync = timezone.now()
+        usertoken.save()
         return new_transaction_list

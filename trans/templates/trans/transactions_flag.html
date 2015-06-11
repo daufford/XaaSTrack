@@ -6,28 +6,59 @@
 {#https://github.com/plaid/link#step-1-get-your-public_key#}
 
 {% block content %}
-    <div class="panel panel-default">
+        <div class="panel panel-default">
         <div class="panel-heading">
             <h1 class="panel-title">
-                Connect to Plaid
+                Transaction List
             </h1>
         </div>
         <div class="panel-body">
+        <table class="table">
+            <tr>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Amount</th>
+                {% if showing_all %}
+                <th>State</th>
+                {% endif %}
+                <th><span style="text-align: center; width:100%">Action</span></th>
+            </tr>
+            {% for transaction in object_list %}
+            <tr>
+                <td>{{ transaction.date }}</td>
+                <td>{{ transaction.name }}</td>
+                <td>{{ transaction.amount }}</td>
+                {% if showing_all %}
+                <td>{{ transaction.get_state_display }}</td>
+                {% endif %}
 
-            <!-- A hidden input named public_token will be appended to this form
-once the user has completed the Link flow. Link will then submit the
-form, sending the public_token to your server. -->
-            <form id="plaid-link-form-id" method="GET" action="{% url 'plaid-link-submit' %}"></form>
+                <td>
+                    {% bootstrap_form_errors form_convert_existing %}
+                    <form action="{% url 'plaid-flag-convert' transaction.pk %}" method="post" style="margin:0; padding:0;display:inline">
+                    {% csrf_token %}
+                        {{ form_convert_existing.userplan }}
 
-            <script
-                    src="https://cdn.plaid.com/link/stable/link-initialize.js"
-                    data-client-name="Client Name"
-                    data-form-id="plaid-link-form-id"
-                    data-key="{{ public_key }}"
-                    data-product="connect"
-                    data-env="tartan">
-            </script>
-
+                        <button type="submit" name="convert" class="btn btn-success btn-sm" title="Tag this transaction onto an existing plan"/>
+                            <i class="fa fa-tag"></i>
+                        </button>
+                    </form>
+                     |
+                <form action="{% url 'plaid-flag-convert' transaction.pk %}" method="post" style="margin:0; padding:0;display:inline">
+                    {% csrf_token %}
+                        <button type="submit" name="newplan" class="btn btn-warning btn-sm" title="Convert this transaction into a new plan"/>
+                            <i class="fa fa-plus-circle"></i>
+                        </button>
+                </form>
+                <form action="{% url 'plaid-flag-convert' transaction.pk %}" method="post" style="margin:0; padding:0;display:inline">
+                    {% csrf_token %}
+                        <button type="submit" name="ignore" class="btn btn-danger btn-sm" title="Ignore/Discard Transaction"/>
+                            <i class="fa fa-bell-slash-o"></i>
+                        </button>
+                </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
 
         </div>
         <div class="panel-footer">
@@ -36,6 +67,10 @@ form, sending the public_token to your server. -->
     </div>
 {% endblock %}
 
+{% block gridstart %}
+    <div class="col-sm-1"></div>
+    <div class="col-md-10">
+{% endblock %}
 
 {##}
 {#            <h3>Userplan</h3>#}

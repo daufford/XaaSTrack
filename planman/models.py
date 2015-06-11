@@ -1,8 +1,10 @@
 from _decimal import Decimal
+from datetime import date, timedelta
+
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.urlresolvers import reverse
-from django.utils import timezone
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
@@ -20,7 +22,7 @@ class PlanProvider(models.Model):
 class UserPlan(models.Model):
 
     #description
-    user_description = models.CharField(max_length=200,verbose_name="Description",blank=True,help_text="form help text")
+    user_description = models.CharField(max_length=200,verbose_name="Description",blank=True,help_text="Additional description (optional)")
     user = models.ForeignKey(User,verbose_name='*useraccount')
     planprovider_text = models.CharField(max_length=200,verbose_name='Service Provider')
     planprovider_key = models.ForeignKey(PlanProvider,verbose_name='*service provider _ key',blank=True,null=True,on_delete=models.SET_NULL)
@@ -31,24 +33,53 @@ class UserPlan(models.Model):
     next_renewal_date = models.DateField(null=True,blank=True)
     expiration_date = models.DateField(null=True,blank=True)
 
-
     #payment schedule
-    last_payment_date = models.DateField(null=True,blank=True)
+    #last_payment_date = models.DateField(null=True,blank=True)
     next_payment_date = models.DateField(null=True,blank=True)
     has_recurring_payment = models.BooleanField(default=False,verbose_name ="Has Recurring Payments?")
     recurring_payment_amount = models.DecimalField(null=True,blank=True,max_digits=10,decimal_places=2,verbose_name="Recurring Payment Amount")
     recurring_payment_months = models.PositiveSmallIntegerField(default=1,null=True,blank=True,verbose_name="Recurring Payment Occurs every X Months")
 
+    # def get_amount_last_month(self):
+    #     amount = sum( (0 if not e.amount else e.amount) for e in self.planevent_set.filter(event_type='pay'))
+    #     if amount>0: return amount
+    #     if(self.recurring_payment_amount):
+    #         return self.recurring_payment_amount
+    #     return Decimal(0.0)
+    #
+    #
+    # def get_year_to_date(self):
+    #     amount = sum((0 if not e.amount else e.amount) for e in self.planevent_set.filter(event_type='pay'))
+    #     if amount>0: return amount
+    #     return Decimal(0.0)
+
     def get_amount_last_month(self):
-        amount = sum( (0 if not e.amount else e.amount) for e in self.planevent_set.filter(event_type='pay'))
+        startdate = date.today() + timedelta(days=-30)
+        enddate = date.today() + timedelta(days=6)
+        amount = sum( (0 if not e.amount else e.amount)
+                      for e in self.planevent_set.filter(event_type='pay',
+                                                         event_date__range=[startdate,enddate]))
         if amount>0: return amount
-        if(self.recurring_payment_amount):
-            return self.recurring_payment_amount
         return Decimal(0.0)
 
+    def get_monthly_payment(self):
+        if(self.recurring_payment_amount):
+            return self.recurring_payment_amount
+        else:
+            return self.get_amount_last_month()
+
+    def get_last_payment_date(self):
+        if(self.planevent_set.count()>0):
+            last_payment = self.planevent_set.filter(event_type='pay').order_by('-event_date').first()
+            return last_payment.event_date
+        return None
 
     def get_year_to_date(self):
-        amount = sum((0 if not e.amount else e.amount) for e in self.planevent_set.filter(event_type='pay'))
+        startdate = date.today() + timedelta(days=-365)
+        enddate = date.today() + timedelta(days=6)
+        amount = sum((0 if not e.amount else e.amount)
+                     for e in self.planevent_set.filter(event_type='pay',
+                                                        event_date__range=[startdate,enddate]))
         if amount>0: return amount
         return Decimal(0.0)
 

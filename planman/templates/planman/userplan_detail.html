@@ -17,12 +17,15 @@
 
             <p>Service Provider: {{ object.planprovider_text }}</p>
             <p>Description: {{ object.user_description }}</p>
+            {% if object.recurring_payment_months %}
+            <p>Renews for ${{ object.recurring_payment_amount }} every {{ object.recurring_payment_months }} months</p>
+            {% endif %}
+            <p>Total paid last month: ${{ object.get_amount_last_month }}</p>
 
-            <p>Last month: ${{ object.get_amount_last_month }}</p>
-
-            <p>Last year: ${{ object.get_year_to_date }}</p>
-
-            <p>Next Renewal: {{ object.next_renewal_date|date }}</p>
+            <p>Total paid in last year: ${{ object.get_year_to_date }}</p>
+<hr>
+            <p>Notes: {{ object.notes }}</p>
+<hr>
             <a href="{% url 'userplan-list' %}">< Home</a>
             <span style="float:right">
                 <a href="{{ object.get_absolute_url }}update" class="btn btn-default btn-xs">
@@ -39,7 +42,7 @@
         <div class="panel-body">
             <div class="text-center">
                 {% bootstrap_form_errors stop_form %}
-                <form action="{% url 'event-create' plan_id=userplan.id %}" method="post">
+                <form action="{% url 'event-create' plan_id=object.id %}" method="post">
                     {% csrf_token %}
                     <p>
                         <b> Amount: </b>
@@ -61,26 +64,29 @@
                     <th>Event</th>
                     <th>Date</th>
                     <th>Amount</th>
-                    <th>Details</th>
+                    <th>Details ?{{ object.planevent_set.objects.count }}</th>
                 </tr>
                 {% for planevent in object.planevent_set.all %}
-                    <tr id="event_{{ object.id }}">
-                        <td class="
-                    {% if planevent.event_type == 'payx' %}success{% elif planevent.event_type == 'stopx' %}warning{% else %}primary{% endif %}
-                    ">
-                            {{ planevent.event_type|capfirst }}
+                    <tr id="event_{{ planevent.id }}"
+                            {% if planevent.id == highlight_id %}
+                                class="success"
+                            {% endif %}
+                            >
+                        <td>{{ planevent.event_type|capfirst }}</td>
 
                         <td>{{ planevent.event_date }}</td>
 
                         <td>{{ planevent.amount|default:"n/a" }}
                         <td>{{ planevent.user_description }}</td>
-                        <span style="float:right">
-                            <a href="{% url 'event-update' pk=planevent.id %}" class="btn btn-default btn-xs"><i
-                                    class="fa fa-edit"></i></a>
+                        <td>
+                            <span style="float:right">
+                                <a href="{% url 'event-update' pk=planevent.id %}" class="btn btn-default btn-xs"><i
+                                        class="fa fa-edit"></i></a>
 
-                            <a href="{% url 'event-delete' pk=planevent.id %}"
-                               class="btn btn-default btn-xs event_delete"><i class="fa fa-trash"></i></a>
-</span></td>
+                                <a href="{% url 'event-delete' pk=planevent.id %}"
+                                   class="btn btn-default btn-xs event_delete"><i class="fa fa-trash"></i></a>
+                            </span>
+                        </td>
                     </tr>
                 {% endfor %}
 
@@ -89,7 +95,7 @@
         </div>
         <div class="panel-footer">
             <div class="text-center">
-                <form action="{% url 'event-create' plan_id=userplan.id %}" method="post">
+                <form action="{% url 'event-create' plan_id=object.id %}" method="post">
                     {% csrf_token %}
                     <p>
                         <b>Actions:</b>

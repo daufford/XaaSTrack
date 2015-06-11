@@ -1,12 +1,14 @@
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponseRedirect,HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import DeleteView, CreateView, UpdateView, FormView
-from .models import *
+from django.views.generic.edit import DeleteView, CreateView, UpdateView
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+
+from .models import *
+
 
 # Create your views here.
 from planman.forms import UserPlanForm,SignUpForm, UserProfileForm, PlanEventForm
@@ -66,16 +68,20 @@ class PlanProviderDelete(LoginRequiredMixin, DeleteView):
 
 class UserPlanList(LoginRequiredMixin, ListView):
     model = UserPlan
+    def get_queryset(self):
+         return UserPlan.objects.filter(user=self.request.user)
+
     def get_context_data(self, **kwargs):  ##adding additional context data
         context = super(UserPlanList, self).get_context_data(**kwargs)
         context['now'] = timezone.now()
-        context['total_month'] = sum(object.get_amount_last_month() for object in context['object_list'])
+        context['total_month'] = sum(object.get_monthly_payment() for object in context['object_list'])
         context['total_ytd']= sum(object.get_year_to_date() for object in context['object_list'])
         return context
 
 class UserPlanUpdate(LoginRequiredMixin, UpdateView):
     model = UserPlan
     form_class = UserPlanForm
+    #success_url = reverse_lazy('userplan-list')
 
 # class UserPlanCreate(LoginRequiredMixin, CreateView):
 #     model = UserPlan
@@ -98,12 +104,12 @@ class UserPlanDelete(LoginRequiredMixin, DeleteView):
 class PlanEventUpdate(LoginRequiredMixin, UpdateView):
     model = PlanEvent
     form_class = PlanEventForm
-    success_url = reverse_lazy('userplan-detail',kwargs={'pk':1})
+    success_url = reverse_lazy('userplan-list')
     #@todo:  fix pk retrival
 
 class PlanEventDelete(LoginRequiredMixin, DeleteView):
     model = PlanEvent
-    success_url = reverse_lazy('userplan-detail',kwargs={'pk':1})
+    success_url = reverse_lazy('userplan-list')
     #@todo: make ajax
 
 class UserPlanDetail(LoginRequiredMixin, DetailView):
@@ -112,6 +118,18 @@ class UserPlanDetail(LoginRequiredMixin, DetailView):
         context = super(UserPlanDetail, self).get_context_data(**kwargs)
         context['stop_form'] = PlanEventForm(initial={'event_date': timezone.now()})
         return context
+            # if self.request.GET:
+        #     if 'highlight' in self.request.GET:
+        #         context['highlight_id']=int(self.request.GET['highlight'])
+
+def test(request,pk):
+    userplan=get_object_or_404(UserPlan,pk=pk)
+    print("Count:")
+    print(userplan.planevent_set.count())
+    for e in userplan.planevent_set.all():
+        print(e)
+
+    return HttpResponse("Flagging was submitted.  {0} / ".format(userplan))
 
 @login_required
 def createEvent(request,plan_id):

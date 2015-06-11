@@ -1,9 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.forms.extras.widgets import SelectDateWidget
 from django.forms.widgets import DateInput
-from planman.models import PlanProvider,UserPlan,UserProfile, PlanEvent
+
+from planman.models import UserPlan,UserProfile, PlanEvent
 
 
 class UserPlanForm(forms.ModelForm):
@@ -31,6 +31,11 @@ class PlanEventForm(forms.ModelForm):
         amount = cleaned_data.get('amount')
         if(self.event_type=='pay' and (not amount or amount<=0)):
             raise forms.ValidationError("Enter amount when adding a payment")
+
+class PlanEvent_ConversionForm(forms.ModelForm):
+    class Meta:
+        model=PlanEvent
+        fields = ['userplan']
 
 
 ##User registration

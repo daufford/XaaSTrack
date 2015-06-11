@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^plan/$', UserPlanList.as_view(), name='userplan-list'),
     url(r'^plan/new/$', UserPlanCreate.as_view(), name='userplan-create'),
     url(r'^plan/(?P<pk>\d+)/$', UserPlanDetail.as_view(), name='userplan-detail'),
+    url(r'^test/(?P<pk>\d+)/$', views.test, name='userplan-test'),
     url(r'^plan/(?P<pk>\d+)/update$', UserPlanUpdate.as_view(), name='userplan-update'),
     url(r'^plan/(?P<pk>\d+)/delete$', UserPlanDelete.as_view(), name='userplan-delete'),
 

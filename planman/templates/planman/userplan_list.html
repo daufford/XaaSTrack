@@ -24,7 +24,7 @@
                     <th>Provider</th>
                     <th>Descriptions</th>
                     <th>Last Payment</th>
-                    <th>Last Month</th>
+                    <th>Monthly Payment</th>
                     <th>YTD</th>
                 </tr>
 
@@ -34,8 +34,8 @@
                         <td><a href="{{ userplan.get_absolute_url }}">
                             {{ userplan.planprovider_text }}</a></td>
                         <td>{{ userplan.user_description }}</td>
-                        <td>{{ userplan.last_payment_date }}</td>
-                        <td>{{ userplan.get_amount_last_month }}</td>
+                        <td>{{ userplan.get_last_payment_date }}</td>
+                        <td>{{ userplan.get_monthly_payment }}</td>
                         <td>{{ userplan.get_year_to_date }}</td>
                     </tr>
 
