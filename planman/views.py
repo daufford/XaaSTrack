@@ -12,6 +12,7 @@ from .models import *
 
 
 
+
 # Create your views here.
 from planman.forms import UserPlanForm,SignUpForm, UserProfileForm, PlanEventForm
 
@@ -119,10 +120,11 @@ class UserPlanDetail(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):  ##adding additional context data
         context = super(UserPlanDetail, self).get_context_data(**kwargs)
         context['stop_form'] = PlanEventForm(initial={'event_date': timezone.now()})
+        if self.request.GET:
+            if 'highlight' in self.request.GET:
+                context['highlight_id']=int(self.request.GET['highlight'])
         return context
-            # if self.request.GET:
-        #     if 'highlight' in self.request.GET:
-        #         context['highlight_id']=int(self.request.GET['highlight'])
+
 
 def test(request,pk):
     userplan=get_object_or_404(UserPlan,pk=pk)
