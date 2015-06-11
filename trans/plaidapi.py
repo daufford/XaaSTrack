@@ -65,7 +65,7 @@ class PlaidAPI():
             account._item = a['_item'].encode('utf-8')
             account._user = a['_user'].encode('utf-8')
             account.name = a['meta']['name'].encode('utf-8')
-            account.type = a['type'].encode('utf-8')
+            account.type = a['type']
             account.institution_type = a['institution_type'].encode('utf-8')
             account.save()
 
@@ -90,14 +90,14 @@ class PlaidAPI():
 
             transaction.usertoken = usertoken
             transaction._id = t['_id'].encode('utf-8')
-            transaction._account = t['_account']
+            transaction._account = t['_account'].encode('utf-8')
             transaction.account=PlaidAccount.objects.filter(_id=t['_account'].encode('utf-8')).get()
             transaction.amount = t['amount']
             transaction.name = t['name'].encode('utf-8')
             transaction.date = t['date']
             transaction.type = t['type']
             if 'category' in t:
-                transaction.category = t['category'].encode('utf-8')
+                transaction.category = t['category']
             if 'meta' in t:
                 transaction.meta = t['meta']
                 transaction.meta_score = t['score']
