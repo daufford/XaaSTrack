@@ -52,7 +52,7 @@ class PlaidAPI():
         ##load in the accounts
         json_accounts = json_data['accounts']
         for a in json_accounts:
-            account = PlaidAccount.objects.filter(_id=a['_id'])
+            account = PlaidAccount.objects.filter(_id=a['_id'].encode('utf-8'))
             if account:
                 account=account.get()
                 created='updated'
@@ -61,12 +61,12 @@ class PlaidAPI():
                 created='created'
 
             account.usertoken = usertoken
-            account._id = a['_id']
-            account._item = a['_item']
-            account._user = a['_user']
+            account._id = a['_id'].encode('utf-8')
+            account._item = a['_item'].encode('utf-8')
+            account._user = a['_user'].encode('utf-8')
             account.name = a['meta']['name'].encode('utf-8')
-            account.type = a['type']
-            account.institution_type = a['institution_type']
+            account.type = a['type'].encode('utf-8')
+            account.institution_type = a['institution_type'].encode('utf-8')
 
 
             #tmp_id = unicodedata.normalize('NFKD', account._id).encode('ascii','ignore')
@@ -77,7 +77,7 @@ class PlaidAPI():
         json_transactions = json_data['transactions']
         new_transaction_list=[]
         for t in json_transactions:
-            transaction = PlaidTransaction.objects.filter(_id=t['_id'])
+            transaction = PlaidTransaction.objects.filter(_id=t['_id'].encode('utf-8'))
             if transaction:
                 transaction=transaction.get()
                 created='updated'
@@ -88,18 +88,18 @@ class PlaidAPI():
                 new_transaction_list.append(transaction)
 
             transaction.usertoken = usertoken
-            transaction._id = t['_id']
-            transaction._account = t['_account']
-            transaction.account=PlaidAccount.objects.filter(_id=t['_account']).get()
-            transaction.amount = t['amount']
+            transaction._id = t['_id'].encode('utf-8')
+            transaction._account = t['_account'].encode('utf-8')
+            transaction.account=PlaidAccount.objects.filter(_id=t['_account'].encode('utf-8')).get()
+            transaction.amount = t['amount'].encode('utf-8')
             transaction.name = t['name'].encode('utf-8')
-            transaction.date = t['date']
-            transaction.type = t['type']
+            transaction.date = t['date'].encode('utf-8')
+            transaction.type = t['type'].encode('utf-8')
             if 'category' in t:
-                transaction.category = t['category']
+                transaction.category = t['category'].encode('utf-8')
             if 'meta' in t:
-                transaction.meta = t['meta']
-                transaction.meta_score = t['score']
+                transaction.meta = t['meta'].encode('utf-8')
+                transaction.meta_score = t['score'].encode('utf-8')
 
             transaction.save()
             print("{0} tx: {1} {2} ".format(created,transaction.date,transaction.name) )
