@@ -92,7 +92,7 @@ class PlaidAPI():
             transaction._id = t['_id'].encode('utf-8')
             transaction._account = t['_account']
             transaction.account=PlaidAccount.objects.filter(_id=t['_account'].encode('utf-8')).get()
-            transaction.amount = t['amount'].encode('utf-8')
+            transaction.amount = t['amount']
             transaction.name = t['name'].encode('utf-8')
             transaction.date = t['date']
             transaction.type = t['type'].encode('utf-8')
