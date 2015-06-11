@@ -67,6 +67,7 @@ class PlaidAPI():
             account.name = a['meta']['name'].encode('utf-8')
             account.type = a['type'].encode('utf-8')
             account.institution_type = a['institution_type'].encode('utf-8')
+            account.save()
 
 
             #tmp_id = unicodedata.normalize('NFKD', account._id).encode('ascii','ignore')
