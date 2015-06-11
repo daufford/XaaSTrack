@@ -13,7 +13,7 @@
             </h1>
         </div>
         <div class="panel-body">
-
+            <div>
             <!-- A hidden input named public_token will be appended to this form
 once the user has completed the Link flow. Link will then submit the
 form, sending the public_token to your server. -->
@@ -27,8 +27,13 @@ form, sending the public_token to your server. -->
                     data-product="{{ product }}"
                     data-env="{{ env }}">
             </script>
+</div>
+            <hr>
 
-
+            <small><p>SubTrack uses <a href="https://plaid.com/">Plaid</a> to securely access your bank or credit card transaction data.  </p>
+            <p>We <i>never</i> touch your bank credentials ourselves.  When you click the button below, a <a href="https://github.com/plaid/link">Plaid Link</a>
+                session will appear on your screen.  Once you complete the authorization process, SubTrack will be able to download transactions from Plaid's servers.
+                </p></small>
         </div>
         <div class="panel-footer">
             <a href="/">< Home</a>
